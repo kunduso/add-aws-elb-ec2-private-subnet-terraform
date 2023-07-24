@@ -72,8 +72,8 @@ resource "aws_nat_gateway" "public" {
   depends_on    = [aws_internet_gateway.this-igw]
 }
 resource "aws_route" "private-route" {
-  count = length(var.subnet_cidr_private)
+  count                  = length(var.subnet_cidr_private)
   destination_cidr_block = "0.0.0.0/0"
-  route_table_id = aws_route_table.private[count.index].id
-  gateway_id = aws_nat_gateway.public.id
+  route_table_id         = aws_route_table.private[count.index].id
+  gateway_id             = aws_nat_gateway.public.id
 }
