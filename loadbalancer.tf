@@ -36,11 +36,11 @@ resource "aws_lb_listener" "front_end" {
 }
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb
 resource "aws_lb" "front" {
-  name               = "front"
-  internal           = false
-  load_balancer_type = "application"
-  security_groups    = [aws_security_group.lb.id]
-  subnets            = [for subnet in aws_subnet.private : subnet.id]
+  name                       = "front"
+  internal                   = false
+  load_balancer_type         = "application"
+  security_groups            = [aws_security_group.lb.id]
+  subnets                    = [for subnet in aws_subnet.private : subnet.id]
   enable_deletion_protection = false
 
   tags = {
