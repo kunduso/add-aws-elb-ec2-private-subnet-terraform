@@ -5,6 +5,7 @@ resource "aws_vpc" "this" {
   enable_dns_support = true
   # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc#enable_dns_hostnames
   enable_dns_hostnames = true
+  #checkov:skip=CKV2_AWS_11: Not creating a flow log for this VPC
   tags = {
     "Name" = "app-1"
   }
@@ -64,6 +65,7 @@ resource "aws_route" "internet-route" {
 resource "aws_eip" "nat_gateway" {
   count  = length(var.subnet_cidr_public)
   domain = "vpc"
+  #checkov:skip=CKV2_AWS_19: The IP is attached to the NAT gateway
 }
 resource "aws_nat_gateway" "public" {
   count         = length(var.subnet_cidr_public)
