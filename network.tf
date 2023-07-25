@@ -63,7 +63,7 @@ resource "aws_route" "internet-route" {
 }
 resource "aws_eip" "nat_gateway" {
   count = length(var.subnet_cidr_public)
-  vpc   = true
+  domain = vpc
 }
 resource "aws_nat_gateway" "public" {
   count         = length(var.subnet_cidr_public)
@@ -75,5 +75,5 @@ resource "aws_route" "private-route" {
   count                  = length(var.subnet_cidr_private)
   destination_cidr_block = "0.0.0.0/0"
   route_table_id         = aws_route_table.private[count.index].id
-  gateway_id             = aws_nat_gateway.public.id
+  gateway_id             = aws_nat_gateway.public[count.index].id
 }
