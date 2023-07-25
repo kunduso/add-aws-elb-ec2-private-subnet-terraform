@@ -62,7 +62,7 @@ resource "aws_route" "internet-route" {
   gateway_id             = aws_internet_gateway.this-igw.id
 }
 resource "aws_eip" "nat_gateway" {
-  count = length(var.subnet_cidr_public)
+  count  = length(var.subnet_cidr_public)
   domain = vpc
 }
 resource "aws_nat_gateway" "public" {
