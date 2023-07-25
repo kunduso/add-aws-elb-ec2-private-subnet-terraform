@@ -63,7 +63,7 @@ resource "aws_route" "internet-route" {
 }
 resource "aws_eip" "nat_gateway" {
   count  = length(var.subnet_cidr_public)
-  domain = vpc
+  domain = "vpc"
 }
 resource "aws_nat_gateway" "public" {
   count         = length(var.subnet_cidr_public)
