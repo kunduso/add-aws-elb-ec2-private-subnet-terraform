@@ -3,14 +3,14 @@
 ## Motivation
 My objectives was to create an application load balancer and attach that to three Amazon EC2 instances hosted in three different availability zones in three separate *private* subnets in a region using **Terraform and GitHub Actions.**
 
-<br />I discussed the concept in detail in my notes at -[Attach an application load balancer to Amazon EC2 instances in a private subnet.](https://skundunotes.com/2023/07/26/attach-an-application-load-balancer-to-amazon-ec2-instances-in-a-private-subnet//)
+<br />I discussed the concept in detail in my notes at -[Attach an application load balancer to Amazon EC2 instances in a private subnet.](https://skundunotes.com/2023/07/26/attach-an-application-load-balancer-to-amazon-ec2-instances-in-a-private-subnet/)
+<br />I also used [Infracost](https://www.infracost.io/) to generate a cost estimate of building the architecture. Checkout the cool *monthly cost badge* at the top of this file. If you want to learn more about adding Infracost estimates to your repository, head over to this note -[Estimate AWS Cloud resource cost with Infracost, Terraform, and GitHub Actions.](https://skundunotes.com/2023/07/17/estimate-aws-cloud-resource-cost-with-infracost-terraform-and-github-actions/)
 
-<br />I also used [Infracost](https://www.infracost.io/) to generate a cost estimate of building the architecture. Checkout the cool badge at the top of this file. If you want to learn more about adding Infracost estimates to your repository, head over to this note -[Estimate AWS Cloud resource cost with Infracost, Terraform, and GitHub Actions.](https://skundunotes.com/2023/07/17/estimate-aws-cloud-resource-cost-with-infracost-terraform-and-github-actions/)
 <br />*Note: I did not include the concepts of creating the EC2 instances, or installing a certificate, or route53 in this note.*
 
 ## Prerequisites
 For this code to function without errors, I created an OpenID connect identity provider in Amazon Identity and Access Management that has a trust relationship with this GitHub repository. You can read about it [here](https://skundunotes.com/2023/02/28/securely-integrate-aws-credentials-with-github-actions-using-openid-connect/) to get a detailed explanation with steps.
-<br />I stored the `ARN` of the `IAM Role` as a GitHub secret which is referred in the [`terraform.yml`](https://github.com/kunduso/add-aws-elb-ec2-terraform/blob/9fa61ad4792c73f233eb1dccb61c477c957d4cdb/.github/workflows/terraform.yml#L33-L38) file.
+<br />I stored the `ARN` of the `IAM Role` as a GitHub secret which is referred in the [`terraform.yml`](https://github.com/kunduso/add-aws-elb-ec2-private-subnet-terraform/blob/4144f6ea8f2599658a760f382241594aa001b433/.github/workflows/terraform.yml#L31-L36) file.
 <br />Since I used Infracost in this repository, I stored the `INFRACOST_API_KEY` as a repository secret. It is referenced in the `terraform.yml` GitHub actions workflow file.
 ## Usage
 Ensure that the policy attached to the IAM role whose credentials are being used in this configuration has permission to create and manage all the resources that are included in this repository.
