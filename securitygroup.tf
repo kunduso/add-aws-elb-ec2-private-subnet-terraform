@@ -14,7 +14,7 @@ resource "aws_default_security_group" "default" {
   }
 }
 resource "aws_security_group" "ec2_instance" {
-  name        = "IN-SG"
+  name        = "App-2-IN-SG"
   description = "Allow inbound and outbound traffic to EC2 instances from load balancer security group"
   ingress {
     from_port       = 80
@@ -32,7 +32,7 @@ resource "aws_security_group" "ec2_instance" {
 }
 
 resource "aws_security_group" "lb" {
-  name        = "LB-SG"
+  name        = "App-2-LB-SG"
   description = "Allow inbound and outbound traffic to load balancer from the internet."
   ingress {
     from_port   = 80

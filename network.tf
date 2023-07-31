@@ -7,7 +7,7 @@ resource "aws_vpc" "this" {
   enable_dns_hostnames = true
   #checkov:skip=CKV2_AWS_11: Not creating a flow log for this VPC
   tags = {
-    "Name" = "app-1"
+    "Name" = "app-2"
   }
 }
 resource "aws_subnet" "private" {
@@ -16,7 +16,7 @@ resource "aws_subnet" "private" {
   cidr_block        = var.subnet_cidr_private[count.index]
   availability_zone = var.availability_zone[count.index]
   tags = {
-    "Name" = "app-1-private-${count.index + 1}"
+    "Name" = "app-2-private-${count.index + 1}"
   }
 }
 resource "aws_subnet" "public" {
@@ -25,20 +25,20 @@ resource "aws_subnet" "public" {
   cidr_block        = var.subnet_cidr_public[count.index]
   availability_zone = var.availability_zone[count.index]
   tags = {
-    "Name" = "app-1-public-${count.index + 1}"
+    "Name" = "app-2-public-${count.index + 1}"
   }
 }
 resource "aws_route_table" "private" {
   count  = length(var.subnet_cidr_private)
   vpc_id = aws_vpc.this.id
   tags = {
-    "Name" = "app-1-route-table-${count.index + 1}"
+    "Name" = "app-2-route-table-${count.index + 1}"
   }
 }
 resource "aws_route_table" "public" {
   vpc_id = aws_vpc.this.id
   tags = {
-    "Name" = "app-1-public"
+    "Name" = "app-2-public"
   }
 }
 resource "aws_route_table_association" "private" {
@@ -54,7 +54,7 @@ resource "aws_route_table_association" "public" {
 resource "aws_internet_gateway" "this-igw" {
   vpc_id = aws_vpc.this.id
   tags = {
-    "Name" = "app-1-gateway"
+    "Name" = "app-2-gateway"
   }
 }
 resource "aws_route" "internet-route" {

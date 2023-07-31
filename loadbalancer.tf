@@ -1,6 +1,6 @@
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_target_group
 resource "aws_lb_target_group" "front" {
-  name     = "application-front"
+  name     = "app-2-front"
   port     = 80
   protocol = "HTTP"
   vpc_id   = aws_vpc.this.id
@@ -36,7 +36,7 @@ resource "aws_lb_listener" "front_end" {
 }
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb
 resource "aws_lb" "front" {
-  name                       = "front"
+  name                       = "app-2-front"
   internal                   = false
   load_balancer_type         = "application"
   security_groups            = [aws_security_group.lb.id]
@@ -44,6 +44,6 @@ resource "aws_lb" "front" {
   enable_deletion_protection = false
 
   tags = {
-    Environment = "front"
+    Environment = "Development"
   }
 }
