@@ -14,7 +14,7 @@ My objectives was to create an application load balancer and attach that to thre
 For this code to function without errors, I created an OpenID connect identity provider in Amazon Identity and Access Management that has a trust relationship with this GitHub repository. You can read about it [here](https://skundunotes.com/2023/02/28/securely-integrate-aws-credentials-with-github-actions-using-openid-connect/) to get a detailed explanation with steps.
 <br />I stored the `ARN` of the `IAM Role` as a GitHub secret which is referred in the [`terraform.yml`](https://github.com/kunduso/add-aws-elb-ec2-private-subnet-terraform/blob/4144f6ea8f2599658a760f382241594aa001b433/.github/workflows/terraform.yml#L31-L36) file.
 <br />Since I used Infracost in this repository, I stored the `INFRACOST_API_KEY` as a repository secret. It is referenced in the `terraform.yml` GitHub actions workflow file.
-<br />As part of the Infracost integration, I also created a `INFRACOST_API_KEY`` and stored that as a GitHub Actions secret. I also managed the cost estimate process using a GitHub Actions variable `INFRACOST_SCAN_TYPE`` where the value is either `hcl_code` or `tf_plan``, depending on the type of scan desired.
+<br />As part of the Infracost integration, I also created a `INFRACOST_API_KEY` and stored that as a GitHub Actions secret. I also managed the cost estimate process using a GitHub Actions variable `INFRACOST_SCAN_TYPE`` where the value is either `hcl_code` or `tf_plan`, depending on the type of scan desired.
 ## Usage
 Ensure that the policy attached to the IAM role whose credentials are being used in this configuration has permission to create and manage all the resources that are included in this repository.
 <br />
