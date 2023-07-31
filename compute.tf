@@ -18,7 +18,7 @@ resource "aws_instance" "app-server" {
   vpc_security_group_ids = [aws_security_group.ec2_instance.id]
   subnet_id              = element(aws_subnet.private.*.id, count.index)
   tags = {
-    Name = "app-server-${count.index + 1}"
+    Name = "app-2-server-${count.index + 1}"
   }
   user_data = file("user_data/user_data.tpl")
 }
