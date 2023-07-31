@@ -72,7 +72,7 @@ resource "aws_nat_gateway" "public" {
   subnet_id     = element(aws_subnet.public.*.id, count.index)
   allocation_id = aws_eip.nat_gateway[count.index].id
   depends_on    = [aws_internet_gateway.this-igw]
-    tags = {
+  tags = {
     "Name" = "app-2-NAT-${count.index + 1}"
   }
 }
