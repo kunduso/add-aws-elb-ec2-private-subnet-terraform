@@ -1,6 +1,6 @@
 # https://docs.aws.amazon.com/glue/latest/dg/set-up-vpc-dns.html
 resource "aws_vpc" "this" {
-  cidr_block = "10.20.20.0/24"
+  cidr_block = var.vpc_cidr
   # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc#enable_dns_support
   enable_dns_support = true
   # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/vpc#enable_dns_hostnames
