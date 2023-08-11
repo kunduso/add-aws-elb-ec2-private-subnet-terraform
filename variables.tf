@@ -20,8 +20,8 @@ variable "secret_key" {
 }
 variable "vpc_cidr" {
   description = "The cidr of the vpc"
-  default = "10.20.20.0/24"
-  type = string
+  default     = "10.20.20.0/24"
+  type        = string
 }
 variable "subnet_cidr_private" {
   description = "cidr blocks for the private subnets"
@@ -40,6 +40,6 @@ variable "availability_zone" {
 }
 variable "ami_name" {
   description = "The ami name of the image from where the instances will be created"
-  default = ["amzn2-ami-amd-hvm-2.0.20230727.0-x86_64-gp2"]
-  type = list(string)
+  default     = ["amzn2-ami-amd-hvm-2.0.20230727.0-x86_64-gp2"]
+  type        = list(string)
 }
