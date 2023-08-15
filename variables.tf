@@ -43,3 +43,8 @@ variable "ami_name" {
   default     = ["amzn2-ami-amd-hvm-2.0.20230727.0-x86_64-gp2"]
   type        = list(string)
 }
+variable "instance_type" {
+  description = "The instance type of the EC2 instances"
+  default     = "t2.micro"
+  type        = string
+}
