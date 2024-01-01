@@ -1,4 +1,5 @@
-
+[![License: Unlicense](https://img.shields.io/badge/license-Unlicense-white.svg)](https://choosealicense.com/licenses/unlicense/)[![GitHub pull-requests closed](https://img.shields.io/github/issues-pr-closed/kunduso/add-aws-elb-ec2-private-subnet-terraform)](https://github.com/kunduso/add-aws-elb-ec2-private-subnet-terraform/pulls?q=is%3Apr+is%3Aclosed)[![GitHub pull-requests](https://img.shields.io/github/issues-pr/kunduso/add-aws-elb-ec2-private-subnet-terraform)](https://GitHub.com/kunduso/add-aws-elb-ec2-private-subnet-terraform/pull/)
+[![GitHub issues-closed](https://img.shields.io/github/issues-closed/kunduso/add-aws-elb-ec2-private-subnet-terraform)](https://github.com/kunduso/add-aws-elb-ec2-private-subnet-terraform/issues?q=is%3Aissue+is%3Aclosed)[![GitHub issues](https://img.shields.io/github/issues/kunduso/add-aws-elb-ec2-private-subnet-terraform)](https://GitHub.com/kunduso/add-aws-elb-ec2-private-subnet-terraform/issues/)
 [![terraform-infra-provisioning](https://github.com/kunduso/add-aws-elb-ec2-private-subnet-terraform/actions/workflows/terraform.yml/badge.svg)](https://github.com/kunduso/add-aws-elb-ec2-private-subnet-terraform/actions/workflows/terraform.yml) [![checkov-scan](https://github.com/kunduso/add-aws-elb-ec2-private-subnet-terraform/actions/workflows/code-scan.yml/badge.svg)](https://github.com/kunduso/add-aws-elb-ec2-private-subnet-terraform/actions/workflows/code-scan.yml) [![infracost](https://img.shields.io/endpoint?url=https://dashboard.api.infracost.io/shields/json/06af6e89-01e0-4bb5-bf85-ea19a0d3327a/repos/4af32dcb-55e6-46d7-a287-9fd4d1fc4f39/branch/1e692b50-7249-40e4-a08f-2d15faa7ccfb)](https://dashboard.infracost.io/org/skundudev/repos/4af32dcb-55e6-46d7-a287-9fd4d1fc4f39?tab=settings)
 ![Image](https://skdevops.files.wordpress.com/2023/07/79-image-1-1.png)
 ## Motivation
@@ -20,3 +21,5 @@ Ensure that the policy attached to the IAM role whose credentials are being used
 <br />
 <br />Review the code including the [`terraform.yml`](./.github/workflows/terraform.yml) to understand the steps in the GitHub Actions pipeline. Also review the `terraform` code to understand all the concepts associated with creating an AWS VPC, subnets, internet gateway, route table, and route table association.
 <br />If you want to check the pipeline logs, click on the **Build Badge** (terrform-infra-provisioning) above the image in this ReadMe.
+## License
+This code is released under the Unlincse License. See [LICENSE](LICENSE).
