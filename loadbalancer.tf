@@ -56,7 +56,7 @@ resource "aws_lb" "front" {
   name                       = "${var.name}-front"
   internal                   = false
   load_balancer_type         = "application"
-  security_groups            = [aws_security_group.lb.id]
+  security_groups            = [aws_security_group.lb_security_group.id]
   subnets                    = [for subnet in module.vpc.public_subnets : subnet.id]
   enable_deletion_protection = false
 
