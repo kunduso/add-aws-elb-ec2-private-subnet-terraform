@@ -10,7 +10,7 @@ resource "aws_route53_record" "alb" {
 
   alias {
     name                   = aws_lb.front.dns_name
-    zone_id               = aws_lb.front.zone_id
+    zone_id                = aws_lb.front.zone_id
     evaluate_target_health = true
   }
 }
