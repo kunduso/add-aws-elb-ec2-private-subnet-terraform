@@ -16,7 +16,7 @@ resource "aws_instance" "app-server" {
   instance_type          = var.instance_type
   ami                    = data.aws_ami.amazon_ami.id
   vpc_security_group_ids = [aws_security_group.ec2_instance.id]
-  subnet_id              = element(aws_subnet.private.*.id, count.index)
+  subnet_id              = element(module.vpc.private_subnets.*.id, count.index)
   metadata_options {
     http_endpoint               = "enabled"
     http_tokens                 = "required"

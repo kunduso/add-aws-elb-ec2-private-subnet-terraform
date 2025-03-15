@@ -1,9 +1,9 @@
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_target_group
 resource "aws_lb_target_group" "front" {
-  name     = "app-2-front"
+  name     = "${var.name}-front"
   port     = 80
   protocol = "HTTP"
-  vpc_id   = aws_vpc.this.id
+  vpc_id   = module.vpc.vpc.id
   health_check {
     enabled             = true
     healthy_threshold   = 3
@@ -36,7 +36,7 @@ resource "aws_lb_listener" "front_end" {
 }
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb
 resource "aws_lb" "front" {
-  name                       = "app-2-front"
+  name                       = "${var.name}-front"
   internal                   = false
   load_balancer_type         = "application"
   security_groups            = [aws_security_group.lb.id]
