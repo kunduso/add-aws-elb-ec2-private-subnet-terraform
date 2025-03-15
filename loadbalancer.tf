@@ -59,6 +59,7 @@ resource "aws_lb" "front" {
   security_groups            = [aws_security_group.lb_security_group.id]
   subnets                    = [for subnet in module.vpc.public_subnets : subnet.id]
   enable_deletion_protection = false
+  drop_invalid_header_fields = true
 
   tags = {
     Environment = "Development"
