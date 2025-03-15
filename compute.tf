@@ -18,6 +18,7 @@ resource "aws_instance" "app-server" {
   vpc_security_group_ids = [aws_security_group.ec2_security_group.id]
   subnet_id              = element(module.vpc.private_subnets.*.id, count.index)
   ebs_optimized          = true
+  monitoring = true
   metadata_options {
     http_endpoint               = "enabled"
     http_tokens                 = "required"
