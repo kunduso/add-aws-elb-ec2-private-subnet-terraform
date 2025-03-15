@@ -17,8 +17,14 @@ resource "aws_instance" "app-server" {
   ami                    = data.aws_ami.amazon_ami.id
   vpc_security_group_ids = [aws_security_group.ec2_instance.id]
   subnet_id              = element(aws_subnet.private.*.id, count.index)
+  metadata_options {
+    http_endpoint               = "enabled"
+    http_tokens                 = "required"
+    http_put_response_hop_limit = 1
+    instance_metadata_tags      = "enabled"
+  }
   tags = {
-    Name = "app-2-server-${count.index + 1}"
+    Name = "${var.name}-server-${count.index + 1}"
   }
   user_data = file("user_data/user_data.tpl")
 }
