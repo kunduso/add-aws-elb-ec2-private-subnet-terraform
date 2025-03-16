@@ -1,3 +1,4 @@
+data "aws_caller_identity" "current" {}
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_target_group
 resource "aws_lb_target_group" "front" {
   name     = "${var.name}-front"
@@ -60,8 +61,19 @@ resource "aws_lb" "front" {
   subnets                    = [for subnet in module.vpc.public_subnets : subnet.id]
   enable_deletion_protection = false
   drop_invalid_header_fields = true
-
+  access_logs {
+    bucket  = aws_s3_bucket.lb_logs.bucket
+    prefix  = "${var.name}-lb-access-logs"
+    enabled = true
+  }
   tags = {
     Environment = "Development"
   }
+  #checkov:skip=CKV2_AWS_28: Ensure public facing ALB are protected by WAF
+  #This check is disabled since this use case is for non-prod environment.
+}
+
+#https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket
+resource "aws_s3_bucket" "lb_logs" {
+  bucket = "${data.aws_caller_identity.current.account_id}-${var.name}-artifacts"
 }
