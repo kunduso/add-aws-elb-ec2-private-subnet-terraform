@@ -32,4 +32,6 @@ resource "aws_instance" "app-server" {
     Name = "${var.name}-server-${count.index + 1}"
   }
   user_data = file("user_data/user_data.tpl")
+  #checkov:skip=CKV2_AWS_41: Ensure an IAM role is attached to EC2 instance
+  #This EC2 instance does not interact with any AWS service
 }
