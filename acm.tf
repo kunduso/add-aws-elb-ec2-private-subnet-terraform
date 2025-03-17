@@ -1,9 +1,8 @@
 
 
 resource "aws_acm_certificate" "main" {
-  domain_name               = "kunduso.com"
-  subject_alternative_names = ["*.kunduso.com"]
-  validation_method         = "DNS"
+  domain_name       = "kunduso.com"
+  validation_method = "DNS"
 
   lifecycle {
     create_before_destroy = true
