@@ -62,7 +62,7 @@ resource "aws_lb" "front" {
   enable_deletion_protection = false
   drop_invalid_header_fields = true
   access_logs {
-    bucket  = aws_s3_bucket.lb_logs.bucket
+    bucket  = aws_s3_bucket.artifacts.id
     prefix  = "${var.name}-lb-access-logs"
     enabled = true
   }
@@ -74,6 +74,38 @@ resource "aws_lb" "front" {
 }
 
 #https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket
-resource "aws_s3_bucket" "lb_logs" {
-  bucket = "${data.aws_caller_identity.current.account_id}-${var.name}-artifacts"
+resource "aws_s3_bucket" "artifacts" {
+  bucket        = "${data.aws_caller_identity.current.account_id}-${var.name}-artifacts"
+  force_destroy = true
+
+  #checkov:skip=CKV2_AWS_18: AWS Access logging not enabled on S3 buckets
+  #checkov:skip=CKV2_AWS_61: An S3 bucket must have a lifecycle configuration
+  #Above rules are for deprecated properties.
+
+  #checkov:skip=CKV_AWS_144: S3 bucket cross-region replication disabled
+  #This bucket is used for storing access logs for the load balancer, and does not require another bucket to store this bucket's access logs.
+
+  #checkov:skip=CKV_AWS_21: AWS S3 Object Versioning is disabled
+  #The items in this S3 bucket do not require versioning.
+
+  #checkov:skip=CKV2_AWS_62: S3 buckets do not have event notifications enabled
+  #The items in this s3 bucket are access logs and do not require any event notifications to be sent anywhere.
+}
+resource "aws_s3_bucket_public_access_block" "artifacts" {
+  bucket                  = aws_s3_bucket.artifacts.id
+  block_public_acls       = true
+  block_public_policy     = true
+  restrict_public_buckets = true
+  ignore_public_acls      = true
+}
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "encrypt_bucket" {
+  bucket = aws_s3_bucket.artifacts.bucket
+
+  rule {
+    apply_server_side_encryption_by_default {
+      kms_master_key_id = aws_kms_key.custom_kms_key.arn
+      sse_algorithm     = "aws:kms"
+    }
+  }
 }
