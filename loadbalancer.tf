@@ -78,7 +78,7 @@ resource "aws_s3_bucket" "artifacts" {
   bucket        = "${data.aws_caller_identity.current.account_id}-${var.name}-artifacts"
   force_destroy = true
 
-  #checkov:skip=CKV2_AWS_18: AWS Access logging not enabled on S3 buckets
+  #checkov:skip=CKV_AWS_18: AWS Access logging not enabled on S3 buckets
   #checkov:skip=CKV2_AWS_61: An S3 bucket must have a lifecycle configuration
   #Above rules are for deprecated properties.
 
