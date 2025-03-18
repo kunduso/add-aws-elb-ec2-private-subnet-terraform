@@ -59,13 +59,13 @@ resource "aws_lb" "front" {
   load_balancer_type         = "application"
   security_groups            = [aws_security_group.lb_security_group.id]
   subnets                    = [for subnet in module.vpc.public_subnets : subnet.id]
-  enable_deletion_protection = true
+  enable_deletion_protection = false
   drop_invalid_header_fields = true
   access_logs {
     bucket  = aws_s3_bucket.artifacts.id
-    prefix  = "${var.name}-lb-access-logs"
     enabled = true
   }
+  depends_on = [aws_s3_bucket_policy.alb_logs]
   tags = {
     Environment = "Development"
   }
@@ -101,11 +101,28 @@ resource "aws_s3_bucket_public_access_block" "artifacts" {
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "encrypt_bucket" {
   bucket = aws_s3_bucket.artifacts.bucket
-
   rule {
     apply_server_side_encryption_by_default {
-      kms_master_key_id = aws_kms_key.custom_kms_key.arn
-      sse_algorithm     = "aws:kms"
+      sse_algorithm = "AES256"
     }
   }
+}
+#https://docs.aws.amazon.com/elasticloadbalancing/latest/application/enable-access-logging.html#attach-bucket-policy
+resource "aws_s3_bucket_policy" "alb_logs" {
+  bucket = aws_s3_bucket.artifacts.id
+
+policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid    = "AllowELBRootAccount"
+        Effect = "Allow"
+        Action = "s3:PutObject"
+        Resource = "${aws_s3_bucket.artifacts.arn}/*"
+        Principal = {
+          AWS = "arn:aws:iam::033677994240:root"  # us-east-2 ELB account
+        }
+      }
+    ]
+  })
 }
