@@ -25,13 +25,13 @@ resource "aws_instance" "app-server" {
     http_put_response_hop_limit = 1
     instance_metadata_tags      = "enabled"
   }
-  root_block_device {
-    encrypted = true
-  }
+  # root_block_device {
+  #   encrypted = true
+  # }
   tags = {
     Name = "${var.name}-server-${count.index + 1}"
   }
-  user_data = file("user_data/user_data.tpl")
+  user_data     = filebase64("./user_data/user_data.tpl")
   #checkov:skip=CKV2_AWS_41: Ensure an IAM role is attached to EC2 instance
   #This EC2 instance does not interact with any AWS service
 }
