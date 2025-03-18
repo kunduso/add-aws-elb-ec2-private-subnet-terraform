@@ -4,15 +4,24 @@ resource "aws_route53_zone" "main" {
   #checkov:skip=CKV2_AWS_39: Domain Name System (DNS) query logging is not enabled for Amazon Route 53 hosted zones
   #This check is disabled since this use case is for non-prod environment.
 }
+resource "time_sleep" "wait_for_dns_propagation" {
+  depends_on      = [aws_route53_zone.main]
+  create_duration = "60s" # 5 minutes
+}
 
-# Enable DNSSEC for the hosted zone
-resource "aws_route53_hosted_zone_dnssec" "example" {
-  hosted_zone_id = aws_route53_zone.main.zone_id
+resource "aws_route53_hosted_zone_dnssec" "dns" {
+  depends_on = [
+    time_sleep.wait_for_dns_propagation,
+    aws_route53_key_signing_key.main,
+    aws_acm_certificate_validation.main
+  ]
+  hosted_zone_id = aws_route53_zone.main.id
 }
 resource "aws_route53_key_signing_key" "main" {
   hosted_zone_id             = aws_route53_zone.main.id
   key_management_service_arn = aws_kms_key.dnssec.arn
-  name                       = "key-signing-key"
+  name                       = "${var.name}-key"
+  status                     = "ACTIVE"
 }
 resource "aws_route53_record" "alb" {
   zone_id = aws_route53_zone.main.zone_id
@@ -44,19 +53,21 @@ resource "aws_route53_record" "acm_validation" {
 }
 
 resource "aws_kms_key" "dnssec" {
+  provider                 = aws.us-east-1 # Must be in us-east-1
   customer_master_key_spec = "ECC_NIST_P256"
   deletion_window_in_days  = 7
   key_usage                = "SIGN_VERIFY"
-  enable_key_rotation      = true
 }
 
 resource "aws_kms_alias" "dnssec" {
-  name          = "alias/${var.name}-dnssec-key"
+  provider      = aws.us-east-1
+  name          = "alias/${var.name}-dnssec"
   target_key_id = aws_kms_key.dnssec.key_id
 }
 
 resource "aws_kms_key_policy" "dnssec" {
-  key_id = aws_kms_key.dnssec.id
+  provider = aws.us-east-1
+  key_id   = aws_kms_key.dnssec.id
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -78,9 +89,26 @@ resource "aws_kms_key_policy" "dnssec" {
         Action = [
           "kms:DescribeKey",
           "kms:GetPublicKey",
-          "kms:Sign"
+          "kms:Sign",
+          "kms:UpdateKeyDescription",
+          "kms:UpdateAlias",
+          "kms:PutKeyPolicy"
         ]
         Resource = "*"
+      },
+      {
+        Sid    = "Allow Route 53 DNSSEC to CreateGrant"
+        Effect = "Allow"
+        Principal = {
+          Service = "dnssec-route53.amazonaws.com"
+        }
+        Action   = "kms:CreateGrant"
+        Resource = "*"
+        Condition = {
+          Bool = {
+            "kms:GrantIsForAWSResource" : "true"
+          }
+        }
       }
     ]
   })
