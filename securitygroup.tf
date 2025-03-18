@@ -47,6 +47,15 @@ resource "aws_security_group_rule" "ingress_load_balancer" {
   cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = aws_security_group.lb_security_group.id
 }
+resource "aws_security_group_rule" "ingress_from_ec2" {
+  description              = "Allow traffic into the load balancer from the EC2 instance."
+  type                     = "ingress"
+  from_port                = 80
+  to_port                  = 80
+  protocol                 = "tcp"
+  source_security_group_id = aws_security_group.ec2_security_group.id
+  security_group_id        = aws_security_group.lb_security_group.id
+}
 #https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule
 resource "aws_security_group_rule" "egress_load_balancer" {
   description       = "Allow traffic to reach outside the vpc."
