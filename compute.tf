@@ -25,9 +25,9 @@ resource "aws_instance" "app-server" {
     http_put_response_hop_limit = 1
     instance_metadata_tags      = "enabled"
   }
-  # root_block_device {
-  #   encrypted = true
-  # }
+  root_block_device {
+    encrypted = true
+  }
   tags = {
     Name = "${var.name}-server-${count.index + 1}"
   }
