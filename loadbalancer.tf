@@ -4,7 +4,7 @@ resource "aws_lb_target_group" "front" {
   name     = "${var.name}-front"
   port     = 80
   protocol = "HTTP"
-  vpc_id   = aws_vpc.this.id
+  vpc_id   = module.vpc.vpc.id
   health_check {
     enabled             = true
     healthy_threshold   = 3
@@ -90,16 +90,16 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "encrypt_bucket" {
 resource "aws_s3_bucket_policy" "alb_logs" {
   bucket = aws_s3_bucket.artifacts.id
 
-policy = jsonencode({
+  policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
       {
-        Sid    = "AllowELBRootAccount"
-        Effect = "Allow"
-        Action = "s3:PutObject"
+        Sid      = "AllowELBRootAccount"
+        Effect   = "Allow"
+        Action   = "s3:PutObject"
         Resource = "${aws_s3_bucket.artifacts.arn}/*"
         Principal = {
-          AWS = "arn:aws:iam::033677994240:root"  # us-east-2 ELB account
+          AWS = "arn:aws:iam::033677994240:root" # us-east-2 ELB account
         }
       }
     ]
