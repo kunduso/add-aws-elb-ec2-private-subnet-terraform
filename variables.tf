@@ -33,10 +33,10 @@ variable "subnet_cidr_public" {
   default     = ["10.20.20.96/27", "10.20.20.128/27", "10.20.20.160/27"]
   type        = list(any)
 }
-variable "availability_zone" {
-  description = "availability zones for the private subnets"
-  default     = ["us-east-2a", "us-east-2b", "us-east-2c"]
-  type        = list(any)
+variable "name" {
+  description = "The name of the application."
+  type        = string
+  default     = "app-2"
 }
 variable "ami_name" {
   description = "The ami name of the image from where the instances will be created"
