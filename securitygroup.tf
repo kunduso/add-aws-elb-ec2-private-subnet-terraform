@@ -19,7 +19,7 @@ resource "aws_security_group_rule" "ingress_ec2" {
 }
 #https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule
 resource "aws_security_group_rule" "egress_ec2" {
-  description       = "allow traffic to the load balancer"
+  description       = "allow traffic to the internet."
   type              = "egress"
   from_port         = 0
   to_port           = 65535
