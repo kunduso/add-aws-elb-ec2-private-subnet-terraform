@@ -1,4 +1,4 @@
-
+#https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/ami
 data "aws_ami" "amazon_ami" {
   filter {
     name   = "name"
