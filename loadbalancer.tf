@@ -18,7 +18,7 @@ resource "aws_lb_target_group" "front" {
   }
 }
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_target_group_attachment
-resource "aws_lb_target_group_attachment" "attach-app2" {
+resource "aws_lb_target_group_attachment" "attach-ec2" {
   count            = length(aws_instance.app-server)
   target_group_arn = aws_lb_target_group.front.arn
   target_id        = element(aws_instance.app-server.*.id, count.index)
