@@ -90,6 +90,13 @@ resource "aws_s3_bucket" "artifacts" {
 
   #checkov:skip=CKV2_AWS_62: S3 buckets do not have event notifications enabled
   #The items in this s3 bucket are access logs and do not require any event notifications to be sent anywhere.
+
+  #checkov:skip=CKV_AWS_145: S3 buckets are not encrypted with KMS
+  #This bucket is used for storing access logs for the load balancer, and 
+  #the only server-side encryption option that's supported is Amazon S3-managed keys (SSE-S3).
+  #https://docs.aws.amazon.com/elasticloadbalancing/latest/application/enable-access-logging.html#access-log-create-bucket
+  #serverside encryption resource is created below: 
+  #resource "aws_s3_bucket_server_side_encryption_configuration" "encrypt_bucket" {}
 }
 resource "aws_s3_bucket_public_access_block" "artifacts" {
   bucket                  = aws_s3_bucket.artifacts.id
