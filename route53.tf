@@ -1,13 +1,13 @@
 
 resource "aws_route53_zone" "main" {
-  name = "kunduso.com"
+  name = var.domain_name
   #checkov:skip=CKV2_AWS_39: Domain Name System (DNS) query logging is not enabled for Amazon Route 53 hosted zones
   #This check is disabled since this use case is for non-prod environment.
 }
 
 resource "aws_route53_record" "alb" {
   zone_id = aws_route53_zone.main.zone_id
-  name    = "kunduso.com"
+  name    = var.domain_name
   type    = "A"
 
   alias {
