@@ -43,6 +43,7 @@ resource "aws_lb" "front" {
   security_groups            = [aws_security_group.lb_security_group.id]
   subnets                    = [for subnet in module.vpc.public_subnets : subnet.id]
   enable_deletion_protection = true
+  drop_invalid_header_fields = true
   access_logs {
     bucket  = aws_s3_bucket.artifacts.id
     enabled = true
