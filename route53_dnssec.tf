@@ -1,20 +1,4 @@
 
-
-resource "aws_route53_hosted_zone_dnssec" "dns" {
-  depends_on = [
-    # time_sleep.wait_for_dns_propagation,
-    aws_route53_key_signing_key.main,
-    aws_acm_certificate_validation.main
-  ]
-  hosted_zone_id = aws_route53_zone.main.id
-}
-resource "aws_route53_key_signing_key" "main" {
-  hosted_zone_id             = aws_route53_zone.main.id
-  key_management_service_arn = aws_kms_key.dnssec.arn
-  name                       = "${var.name}-key"
-  status                     = "ACTIVE"
-}
-
 resource "aws_kms_key" "dnssec" {
   provider                 = aws.us-east-1 # Must be in us-east-1
   customer_master_key_spec = "ECC_NIST_P256"
@@ -55,17 +39,9 @@ resource "aws_kms_key_policy" "dnssec" {
           "kms:Sign",
           "kms:UpdateKeyDescription",
           "kms:UpdateAlias",
-          "kms:PutKeyPolicy"
+          "kms:PutKeyPolicy",
+          "kms:CreateGrant"
         ]
-        Resource = "*"
-      },
-      {
-        Sid    = "Allow Route 53 DNSSEC to CreateGrant"
-        Effect = "Allow"
-        Principal = {
-          Service = "dnssec-route53.amazonaws.com"
-        }
-        Action   = "kms:CreateGrant"
         Resource = "*"
         Condition = {
           Bool = {
@@ -75,4 +51,18 @@ resource "aws_kms_key_policy" "dnssec" {
       }
     ]
   })
+}
+
+resource "aws_route53_key_signing_key" "main" {
+  hosted_zone_id             = aws_route53_zone.main.id
+  key_management_service_arn = aws_kms_key.dnssec.arn
+  name                       = "${var.name}-key"
+  status                     = "ACTIVE"
+}
+resource "aws_route53_hosted_zone_dnssec" "dns" {
+  depends_on = [
+    aws_route53_key_signing_key.main,
+    aws_acm_certificate_validation.main
+  ]
+  hosted_zone_id = aws_route53_zone.main.id
 }
