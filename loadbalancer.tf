@@ -31,9 +31,26 @@ resource "aws_lb_listener" "front_end" {
   protocol          = "HTTP"
 
   default_action {
+    type = "redirect"
+    redirect {
+      port        = "443"
+      protocol    = "HTTPS"
+      status_code = "HTTP_301"
+    }
+
+  }
+}
+resource "aws_lb_listener" "https" {
+  load_balancer_arn = aws_lb.front.arn
+  port              = "443"
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-TLS13-1-2-2021-06"
+  certificate_arn   = aws_acm_certificate_validation.main.certificate_arn
+  default_action {
     type             = "forward"
     target_group_arn = aws_lb_target_group.front.arn
   }
+  depends_on = [aws_acm_certificate_validation.main]
 }
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb
 resource "aws_lb" "front" {
@@ -52,7 +69,10 @@ resource "aws_lb" "front" {
   tags = {
     Environment = "Development"
   }
+  #checkov:skip=CKV2_AWS_28: Ensure public facing ALB are protected by WAF
+  #This check is disabled since this use case is for non-prod environment.
 }
+
 #https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket
 resource "aws_s3_bucket" "artifacts" {
   bucket        = "${data.aws_caller_identity.current.account_id}-${var.name}-artifacts"
@@ -70,6 +90,13 @@ resource "aws_s3_bucket" "artifacts" {
 
   #checkov:skip=CKV2_AWS_62: S3 buckets do not have event notifications enabled
   #The items in this s3 bucket are access logs and do not require any event notifications to be sent anywhere.
+
+  #checkov:skip=CKV_AWS_145: S3 buckets are not encrypted with KMS
+  #This bucket is used for storing access logs for the load balancer, and 
+  #the only server-side encryption option that's supported is Amazon S3-managed keys (SSE-S3).
+  #https://docs.aws.amazon.com/elasticloadbalancing/latest/application/enable-access-logging.html#access-log-create-bucket
+  #serverside encryption resource is created below: 
+  #resource "aws_s3_bucket_server_side_encryption_configuration" "encrypt_bucket" {}
 }
 resource "aws_s3_bucket_public_access_block" "artifacts" {
   bucket                  = aws_s3_bucket.artifacts.id
