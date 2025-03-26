@@ -7,7 +7,6 @@ This repository contains code to provision various use cases involving Amazon El
 ## Table of Contents
 - [Use Case 1: Create Application Load Balancer and attach to Amazon EC2 instances in a private subnet](#use-case-1-create-application-load-balancer-and-attach-to-amazon-ec2-instances-in-a-private-subnet)
 - [Use Case 2: Automate Amazon Route 53 hosted zone, ACM, and Load Balancer provisioning with Terraform and GitHub Actions](#use-case-2-automate-amazon-route-53-hosted-zone-acm-and-load-balancer-provisioning-with-terraform-and-github-actions)
-
 - [Prerequisites](#prerequisites)
 - [Supporting References](#supporting-references)
 - [Usage](#usage)
@@ -25,7 +24,7 @@ The objective of this use case was to create an application load balancer and at
 ![Image](https://skdevops.files.wordpress.com/2025/03/112-image-0.png)
 Building on use case 1, this implementation shows how to:
 - Enable secure HTTPS (port 443) access to the static website
-- Configure a custom domain name with Amazon Route 53 [2]
+- Configure a custom domain name with Amazon Route 53
 - Implement SSL/TLS security using AWS Certificate Manager
 - Replace the default load balancer DNS with a custom domain
 
