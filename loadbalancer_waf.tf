@@ -8,10 +8,33 @@ resource "aws_wafv2_web_acl" "main" {
     allow {}
   }
 
-  # Rule 1: AWS Managed Core Rule Set
+  # Rule 1: AWS Managed Known Bad Inputs Rule Set (Log4j Protection)
+  rule {
+    name     = "AWSManagedRulesKnownBadInputsRuleSet"
+    priority = 1
+
+    override_action {
+      none {}
+    }
+
+    statement {
+      managed_rule_group_statement {
+        name        = "AWSManagedRulesKnownBadInputsRuleSet"
+        vendor_name = "AWS"
+      }
+    }
+
+    visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "AWSManagedRulesKnownBadInputsMetric"
+      sampled_requests_enabled   = true
+    }
+  }
+
+  # Rule 2: AWS Managed Core Rule Set
   rule {
     name     = "AWSManagedRulesCommonRuleSet"
-    priority = 1
+    priority = 2
 
     override_action {
       none {}
@@ -31,10 +54,10 @@ resource "aws_wafv2_web_acl" "main" {
     }
   }
 
-  # Rule 2: AWS Managed SQL Injection Rule Set
+  # Rule 3: AWS Managed SQL Injection Rule Set
   rule {
     name     = "AWSManagedRulesSQLiRuleSet"
-    priority = 2
+    priority = 3
 
     override_action {
       none {}
@@ -54,10 +77,10 @@ resource "aws_wafv2_web_acl" "main" {
     }
   }
 
-  # Rule 3: Rate Limiting Rule
+  # Rule 4: Rate Limiting Rule
   rule {
     name     = "RateLimitRule"
-    priority = 3
+    priority = 4
 
     action {
       block {}
@@ -77,10 +100,10 @@ resource "aws_wafv2_web_acl" "main" {
     }
   }
 
-  # Rule 4: Block specific geographic locations (optional)
+  # Rule 5: Block specific geographic locations
   rule {
     name     = "GeoBlockRule"
-    priority = 4
+    priority = 5
 
     action {
       block {}
@@ -88,8 +111,7 @@ resource "aws_wafv2_web_acl" "main" {
 
     statement {
       geo_match_statement {
-        # Countries to block. List: https://en.wikipedia.org/wiki/ISO_3166-1
-        country_codes = ["KP"]
+        country_codes = ["CN", "RU"] # Example countries to block
       }
     }
 
