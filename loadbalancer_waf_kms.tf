@@ -1,22 +1,22 @@
 data "aws_region" "current" {}
 locals {
-  waf_log           = "aws-waf-logs-${var.name}"
+  waf_log            = "aws-waf-logs-${var.name}"
   principal_root_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"
   principal_logs_arn = "logs.${data.aws_region.current.name}.amazonaws.com"
-  waf_log_group_arn = "arn:aws:logs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:log-group:${local.waf_log}"
+  waf_log_group_arn  = "arn:aws:logs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:log-group:${local.waf_log}"
 }
 
 #https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_group
 resource "aws_cloudwatch_log_group" "waf_log_group" {
-  name              = "${local.waf_log}"
+  name              = local.waf_log
   retention_in_days = 365
-  kms_key_id       = aws_kms_key.waf_log.arn
+  kms_key_id        = aws_kms_key.waf_log.arn
 }
 resource "aws_kms_key" "waf_log" {
   description             = "KMS key to encrypt load balancer WAF logs."
   deletion_window_in_days = 7
-  enable_key_rotation    = true
-  
+  enable_key_rotation     = true
+
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -43,7 +43,7 @@ resource "aws_kms_key" "waf_log" {
           "kms:Describe*"
         ]
         Resource = "*"
-                Condition = {
+        Condition = {
           ArnLike = {
             "kms:EncryptionContext:aws:logs:arn" : "${local.waf_log_group_arn}*"
           }

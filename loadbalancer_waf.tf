@@ -89,7 +89,7 @@ resource "aws_wafv2_web_acl" "main" {
     statement {
       geo_match_statement {
         # Countries to block. List: https://en.wikipedia.org/wiki/ISO_3166-1
-        country_codes = ["KP"] 
+        country_codes = ["KP"]
       }
     }
 
@@ -119,7 +119,7 @@ resource "aws_wafv2_web_acl_association" "main" {
 
 resource "aws_wafv2_web_acl_logging_configuration" "main" {
   log_destination_configs = ["${local.waf_log_group_arn}"]
-  resource_arn           = aws_wafv2_web_acl.main.arn
+  resource_arn            = aws_wafv2_web_acl.main.arn
 
   logging_filter {
     default_behavior = "KEEP"
