@@ -7,7 +7,6 @@ resource "aws_wafv2_web_acl" "main" {
   default_action {
     allow {}
   }
-
   # Rule 1: AWS Managed Known Bad Inputs Rule Set (Log4j Protection)
   rule {
     name     = "AWSManagedRulesKnownBadInputsRuleSet"
@@ -30,7 +29,6 @@ resource "aws_wafv2_web_acl" "main" {
       sampled_requests_enabled   = true
     }
   }
-
   # Rule 2: AWS Managed Core Rule Set
   rule {
     name     = "AWSManagedRulesCommonRuleSet"
@@ -53,7 +51,6 @@ resource "aws_wafv2_web_acl" "main" {
       sampled_requests_enabled   = true
     }
   }
-
   # Rule 3: AWS Managed SQL Injection Rule Set
   rule {
     name     = "AWSManagedRulesSQLiRuleSet"
@@ -76,7 +73,6 @@ resource "aws_wafv2_web_acl" "main" {
       sampled_requests_enabled   = true
     }
   }
-
   # Rule 4: Rate Limiting Rule
   rule {
     name     = "RateLimitRule"
@@ -99,7 +95,6 @@ resource "aws_wafv2_web_acl" "main" {
       sampled_requests_enabled   = true
     }
   }
-
   # Rule 5: Block specific geographic locations
   rule {
     name     = "GeoBlockRule"
@@ -111,7 +106,8 @@ resource "aws_wafv2_web_acl" "main" {
 
     statement {
       geo_match_statement {
-        country_codes = ["CN", "RU"] # Example countries to block
+        # Countries to block. List: https://en.wikipedia.org/wiki/ISO_3166-1
+        country_codes = ["KP"]
       }
     }
 
@@ -121,13 +117,11 @@ resource "aws_wafv2_web_acl" "main" {
       sampled_requests_enabled   = true
     }
   }
-
   visibility_config {
     cloudwatch_metrics_enabled = true
     metric_name                = "${var.name}-web-acl-metric"
     sampled_requests_enabled   = true
   }
-
   tags = {
     Name = "${var.name}-web-acl"
   }
