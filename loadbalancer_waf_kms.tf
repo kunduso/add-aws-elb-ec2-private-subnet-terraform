@@ -6,12 +6,15 @@ locals {
   waf_log_group_arn  = "arn:aws:logs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:log-group:${local.waf_log}"
 }
 
+# Create CloudWatch log group to store logs from WAF
 #https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_group
 resource "aws_cloudwatch_log_group" "waf_log_group" {
   name              = local.waf_log
   retention_in_days = 365
   kms_key_id        = aws_kms_key.waf_log.arn
 }
+# Create a KMS Key to encrypt the CloudWatch logs
+#https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/kms_key
 resource "aws_kms_key" "waf_log" {
   description             = "KMS key to encrypt load balancer WAF logs."
   deletion_window_in_days = 7
@@ -52,14 +55,9 @@ resource "aws_kms_key" "waf_log" {
     ]
   })
 }
-# Add an alias for the KMS key (optional but recommended)
+# Create an alias for the KMS key
+#https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/kms_alias
 resource "aws_kms_alias" "waf_log" {
   name          = "alias/${var.name}-lb-waf-cloudwatch-logs"
   target_key_id = aws_kms_key.waf_log.key_id
 }
-# Create KMS key for CloudWatch Logs encryption
-
-
-
-
-

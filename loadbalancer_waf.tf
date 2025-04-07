@@ -1,4 +1,5 @@
-# Create WAF Web ACL
+# WAF Web ACL to protect ALB against SQL injection, known vulnerabilities, rate limits, and geo-restrictions
+#https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/wafv2_web_acl
 resource "aws_wafv2_web_acl" "main" {
   name        = "${var.name}-web-acl"
   description = "WAF Web ACL for ALB"
@@ -128,11 +129,13 @@ resource "aws_wafv2_web_acl" "main" {
 }
 
 # Associate WAF Web ACL with the ALB
+#https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/wafv2_web_acl_association
 resource "aws_wafv2_web_acl_association" "main" {
   resource_arn = aws_lb.front.arn
   web_acl_arn  = aws_wafv2_web_acl.main.arn
 }
-
+# Assocaiate WAF Web ACL with CloudWatch Log group
+#https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/wafv2_web_acl_logging_configuration
 resource "aws_wafv2_web_acl_logging_configuration" "main" {
   log_destination_configs = ["${local.waf_log_group_arn}"]
   resource_arn            = aws_wafv2_web_acl.main.arn
