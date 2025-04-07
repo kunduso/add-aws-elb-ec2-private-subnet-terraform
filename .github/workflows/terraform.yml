@@ -18,10 +18,10 @@ permissions: read-all
 #
 #--------------------------
 jobs:
-  terraform:
-    name: 'continuous-integration'
+  create-hosted-zone:
+    name: 'Create DNS Zone'
     runs-on: ubuntu-latest
-    environment: "production-infrastructure"
+    environment: "production-dns-zone"
     permissions:
       contents: read
       id-token: write
@@ -88,7 +88,6 @@ jobs:
     - name: Terraform Init
       id: init
       run: terraform init
-
     # Checks that all Terraform configuration files adhere to a canonical format
     - name: Terraform Format
       id: fmt
@@ -153,6 +152,48 @@ jobs:
             repo: context.repo.repo,
             body: output
           })
+
+    # On push to "main", build or change infrastructure according to Terraform configuration files
+    # Note: It is recommended to set up a required "strict" status check in your repository for "Terraform Cloud". See the documentation on "strict" required status checks for more information: https://help.github.com/en/github/administering-a-repository/types-of-required-status-checks
+    - name: Terraform Apply
+      if: github.ref == 'refs/heads/main'
+      run: terraform apply -target=aws_route53_zone.main -auto-approve -input=false
+  
+  deploy-app-resources:
+    name: 'Deploy Application Resources'
+    needs: create-hosted-zone
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    environment: "production-infrastructure"
+    permissions:
+      contents: read
+      id-token: write
+      pull-requests: write
+    # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+    # Checkout the repository to the GitHub Actions runner
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Configure AWS Credentials Action For GitHub Actions
+      uses: aws-actions/configure-aws-credentials@v1-node16
+      with:
+        role-to-assume: ${{ secrets.IAM_ROLE }}
+        role-session-name: AWSSession
+        aws-region: us-east-2
+
+    # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+
+    # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
+    - name: Terraform Init
+      id: init
+      run: terraform init
 
     # On push to "main", build or change infrastructure according to Terraform configuration files
     # Note: It is recommended to set up a required "strict" status check in your repository for "Terraform Cloud". See the documentation on "strict" required status checks for more information: https://help.github.com/en/github/administering-a-repository/types-of-required-status-checks
