@@ -69,8 +69,6 @@ resource "aws_lb" "front" {
   tags = {
     Environment = "Development"
   }
-  #checkov:skip=CKV2_AWS_28: Ensure public facing ALB are protected by WAF
-  #This check is disabled since this use case is for non-prod environment.
 }
 
 #https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket
