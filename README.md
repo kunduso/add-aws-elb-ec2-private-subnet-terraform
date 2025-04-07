@@ -5,7 +5,8 @@
 This repository contains code to provision various use cases involving Amazon Elastic Load Balancer, Amazon Route53, Amazon Certificate Manager and Amazon EC2 instances using Terraform and GitHub Actions.
 ## Table of Contents
 - [Use Case 1: Create Application Load Balancer and attach to Amazon EC2 instances in a private subnet](#use-case-1-create-application-load-balancer-and-attach-to-amazon-ec2-instances-in-a-private-subnet)
-- [Use Case 2: Automate Amazon Route 53 hosted zone, ACM, and Load Balancer provisioning with Terraform and GitHub Actions](#use-case-2-automate-amazon-route-53-hosted-zone-acm-and-load-balancer-provisioning-with-terraform-and-github-actions)
+- [Use Case 2: Attach AWS WAF to load balancer using Terraform and GitHub Actions](#use-case-2-attach-aws-waf-to-load-balancer-using-terraform-and-github-actions)
+- [Use Case 3: Automate Amazon Route 53 hosted zone, ACM, and Load Balancer provisioning with Terraform and GitHub Actions](#use-case-3-automate-amazon-route-53-hosted-zone-acm-and-load-balancer-provisioning-with-terraform-and-github-actions)
 - [Prerequisites](#prerequisites)
 - [Supporting References](#supporting-references)
 - [Usage](#usage)
@@ -18,10 +19,22 @@ This repository contains code to provision various use cases involving Amazon El
 The objective of this use case was to create an application load balancer and attach that to three Amazon EC2 instances hosted in three different availability zones in three separate *private* subnets in a region using **Terraform and GitHub Actions.**
 <br />For details please visit - [attach an application load balancer to Amazon EC2 instances in a private subnet.](https://skundunotes.com/2023/07/26/attach-an-application-load-balancer-to-amazon-ec2-instances-in-a-private-subnet/)
 
-## Use Case 2: Automate Amazon Route 53 hosted zone, ACM, and Load Balancer provisioning with Terraform and GitHub Actions
+## Use Case 2: Attach AWS WAF to load balancer using Terraform and GitHub Actions
+**🔔 Attention:** The code for this specific use case is located in the [`add-waf`](https://github.com/kunduso/add-aws-elb-ec2-private-subnet-terraform/tree/add-waf) branch. Please refer to this branch instead of the default `main` branch. **🔔**
+![Image](https://skdevops.files.wordpress.com/2025/04/113-image-0.png)
+Building on use case 1, this implementation shows how to:
+- Protect the application load balancer with AWS WAF security rules
+- Implement AWS managed rules for common vulnerabilities and exploits
+- Configure rate limiting to prevent DDoS attacks
+- Set up geographic restrictions for access control
+- Enable monitoring and logging of WAF activities through CloudWatch
+
+For details, please visit - [attach-aws-waf-to-load-balancer-using-terraform-and-github-actions.](https://skundunotes.com/2025/04/06/attach-aws-waf-to-load-balancer-using-terraform-and-github-actions/)
+
+## Use Case 3: Automate Amazon Route 53 hosted zone, ACM, and Load Balancer provisioning with Terraform and GitHub Actions
 **🔔 Attention:** The code for this specific use case is located in the [`add-acm-r53`](https://github.com/kunduso/add-aws-elb-ec2-private-subnet-terraform/tree/add-acm-r53) branch. Please refer to this branch instead of the default `main` branch. **🔔**
 ![Image](https://skdevops.files.wordpress.com/2025/03/112-image-0.png)
-Building on use case 1, this implementation shows how to:
+Building on use case 2, this implementation shows how to:
 - Enable secure HTTPS (port 443) access to the static website
 - Configure a custom domain name with Amazon Route 53
 - Implement SSL/TLS security using AWS Certificate Manager

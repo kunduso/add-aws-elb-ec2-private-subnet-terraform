@@ -48,3 +48,8 @@ variable "instance_type" {
   default     = "t3.medium"
   type        = string
 }
+variable "domain_name" {
+  description = "The domain name of the application."
+  type        = string
+  default     = "kunduso.com"
+}

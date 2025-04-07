@@ -41,8 +41,8 @@ resource "aws_security_group" "lb_security_group" {
 resource "aws_security_group_rule" "ingress_load_balancer" {
   description       = "Allow traffic into the load balancer from the internet."
   type              = "ingress"
-  from_port         = 80
-  to_port           = 80
+  from_port         = 443
+  to_port           = 443
   protocol          = "tcp"
   cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = aws_security_group.lb_security_group.id
