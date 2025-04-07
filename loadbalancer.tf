@@ -59,7 +59,7 @@ resource "aws_lb" "front" {
   load_balancer_type         = "application"
   security_groups            = [aws_security_group.lb_security_group.id]
   subnets                    = [for subnet in module.vpc.public_subnets : subnet.id]
-  enable_deletion_protection = false
+  enable_deletion_protection = true
   drop_invalid_header_fields = true
   access_logs {
     bucket  = aws_s3_bucket.artifacts.id
@@ -69,8 +69,6 @@ resource "aws_lb" "front" {
   tags = {
     Environment = "Development"
   }
-  #checkov:skip=CKV2_AWS_28: Ensure public facing ALB are protected by WAF
-  #This check is disabled since this use case is for non-prod environment.
 }
 
 #https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket
