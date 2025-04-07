@@ -153,4 +153,5 @@ resource "aws_wafv2_web_acl_logging_configuration" "main" {
       requirement = "MEETS_ANY"
     }
   }
+  depends_on = [aws_wafv2_web_acl.main, aws_lb.front]
 }
