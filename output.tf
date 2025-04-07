@@ -1,3 +1,3 @@
-output "route53_name_servers" {
-  value = aws_route53_zone.main.name_servers
+output "load_balancer_dns_name" {
+  value = "http://${aws_lb.front.dns_name}"
 }

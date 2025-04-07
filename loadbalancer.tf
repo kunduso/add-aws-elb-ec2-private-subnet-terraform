@@ -31,26 +31,9 @@ resource "aws_lb_listener" "front_end" {
   protocol          = "HTTP"
 
   default_action {
-    type = "redirect"
-    redirect {
-      port        = "443"
-      protocol    = "HTTPS"
-      status_code = "HTTP_301"
-    }
-
-  }
-}
-resource "aws_lb_listener" "https" {
-  load_balancer_arn = aws_lb.front.arn
-  port              = "443"
-  protocol          = "HTTPS"
-  ssl_policy        = "ELBSecurityPolicy-TLS13-1-2-2021-06"
-  certificate_arn   = aws_acm_certificate_validation.main.certificate_arn
-  default_action {
     type             = "forward"
     target_group_arn = aws_lb_target_group.front.arn
   }
-  depends_on = [aws_acm_certificate_validation.main]
 }
 # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb
 resource "aws_lb" "front" {
@@ -70,7 +53,6 @@ resource "aws_lb" "front" {
     Environment = "Development"
   }
 }
-
 #https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket
 resource "aws_s3_bucket" "artifacts" {
   bucket        = "${data.aws_caller_identity.current.account_id}-${var.name}-artifacts"
