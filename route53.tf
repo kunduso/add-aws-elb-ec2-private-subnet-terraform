@@ -1,8 +1,6 @@
 
 resource "aws_route53_zone" "main" {
   name = var.domain_name
-  #checkov:skip=CKV2_AWS_39: Domain Name System (DNS) query logging is not enabled for Amazon Route 53 hosted zones
-  #This check is disabled since this use case is for non-prod environment.
 }
 
 resource "aws_route53_record" "alb" {
@@ -32,4 +30,34 @@ resource "aws_route53_record" "acm_validation" {
   ttl             = 60
   type            = each.value.type
   zone_id         = aws_route53_zone.main.zone_id
+}
+
+data "aws_iam_policy_document" "route53-query-logging-policy" {
+  statement {
+    actions = [
+      "logs:CreateLogStream",
+      "logs:PutLogEvents",
+    ]
+
+    resources = ["arn:aws:logs:*:*:log-group:/aws/route53/*"]
+
+    principals {
+      identifiers = ["route53.amazonaws.com"]
+      type        = "Service"
+    }
+  }
+}
+
+resource "aws_cloudwatch_log_resource_policy" "route53-query-logging-policy" {
+  provider = aws.us-east-1
+
+  policy_document = data.aws_iam_policy_document.route53-query-logging-policy.json
+  policy_name     = "route53-query-logging-policy"
+}
+
+resource "aws_route53_query_log" "dns_query" {
+  depends_on = [aws_cloudwatch_log_resource_policy.route53-query-logging-policy]
+
+  cloudwatch_log_group_arn = aws_cloudwatch_log_group.dns_query_log_group.arn
+  zone_id                  = aws_route53_zone.main.zone_id
 }
