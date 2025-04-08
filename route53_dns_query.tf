@@ -1,7 +1,7 @@
+#https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region
 data "aws_region" "us-east-1" {
   provider = aws.us-east-1
 }
-
 locals {
   dns_query_log                = "/aws/route53/${var.name}/dns-query-logs"
   principal_logs_us-east-1_arn = "logs.${data.aws_region.us-east-1.name}.amazonaws.com"
