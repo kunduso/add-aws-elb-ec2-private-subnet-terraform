@@ -11,6 +11,7 @@ data "aws_ami" "amazon_ami" {
   most_recent = true
   owners      = ["amazon"]
 }
+#https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/instance
 resource "aws_instance" "app-server" {
   count                  = length(var.subnet_cidr_private)
   instance_type          = var.instance_type
