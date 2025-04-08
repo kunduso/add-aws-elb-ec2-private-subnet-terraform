@@ -40,6 +40,7 @@ resource "aws_lb_listener" "front_end" {
 
   }
 }
+# https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_listener
 resource "aws_lb_listener" "https" {
   load_balancer_arn = aws_lb.front.arn
   port              = "443"
