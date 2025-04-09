@@ -40,6 +40,7 @@ resource "aws_lb_listener" "front_end" {
 
   }
 }
+# https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_listener
 resource "aws_lb_listener" "https" {
   load_balancer_arn = aws_lb.front.arn
   port              = "443"
@@ -69,8 +70,6 @@ resource "aws_lb" "front" {
   tags = {
     Environment = "Development"
   }
-  #checkov:skip=CKV2_AWS_28: Ensure public facing ALB are protected by WAF
-  #This check is disabled since this use case is for non-prod environment.
 }
 
 #https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket
@@ -98,6 +97,7 @@ resource "aws_s3_bucket" "artifacts" {
   #serverside encryption resource is created below: 
   #resource "aws_s3_bucket_server_side_encryption_configuration" "encrypt_bucket" {}
 }
+#https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_public_access_block
 resource "aws_s3_bucket_public_access_block" "artifacts" {
   bucket                  = aws_s3_bucket.artifacts.id
   block_public_acls       = true
@@ -106,6 +106,7 @@ resource "aws_s3_bucket_public_access_block" "artifacts" {
   ignore_public_acls      = true
 }
 
+#https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_server_side_encryption_configuration
 resource "aws_s3_bucket_server_side_encryption_configuration" "encrypt_bucket" {
   bucket = aws_s3_bucket.artifacts.bucket
   rule {
@@ -115,6 +116,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "encrypt_bucket" {
   }
 }
 #https://docs.aws.amazon.com/elasticloadbalancing/latest/application/enable-access-logging.html#attach-bucket-policy
+#https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_policy
 resource "aws_s3_bucket_policy" "alb_logs" {
   bucket = aws_s3_bucket.artifacts.id
 

@@ -5,7 +5,9 @@
 This repository contains code to provision various use cases involving Amazon Elastic Load Balancer, Amazon Route53, Amazon Certificate Manager and Amazon EC2 instances using Terraform and GitHub Actions.
 ## Table of Contents
 - [Use Case 1: Create Application Load Balancer and attach to Amazon EC2 instances in a private subnet](#use-case-1-create-application-load-balancer-and-attach-to-amazon-ec2-instances-in-a-private-subnet)
-- [Use Case 2: Automate Amazon Route 53 hosted zone, ACM, and Load Balancer provisioning with Terraform and GitHub Actions](#use-case-2-automate-amazon-route-53-hosted-zone-acm-and-load-balancer-provisioning-with-terraform-and-github-actions)
+- [Use Case 2: Attach AWS WAF to load balancer using Terraform and GitHub Actions](#use-case-2-attach-aws-waf-to-load-balancer-using-terraform-and-github-actions)
+- [Use Case 3: Automate Amazon Route 53 hosted zone, ACM, and Load Balancer provisioning with Terraform and GitHub Actions](#use-case-3-automate-amazon-route-53-hosted-zone-acm-and-load-balancer-provisioning-with-terraform-and-github-actions)
+- [Use Case 4: Enable Domain Name System (DNS) query logging for Amazon Route 53 hosted zones using Terraform](#use-case-4-enable-domain-name-system-dns-query-logging-for-amazon-route-53-hosted-zones-using-terraform)
 - [Prerequisites](#prerequisites)
 - [Supporting References](#supporting-references)
 - [Usage](#usage)
@@ -18,16 +20,43 @@ This repository contains code to provision various use cases involving Amazon El
 The objective of this use case was to create an application load balancer and attach that to three Amazon EC2 instances hosted in three different availability zones in three separate *private* subnets in a region using **Terraform and GitHub Actions.**
 <br />For details please visit - [attach an application load balancer to Amazon EC2 instances in a private subnet.](https://skundunotes.com/2023/07/26/attach-an-application-load-balancer-to-amazon-ec2-instances-in-a-private-subnet/)
 
-## Use Case 2: Automate Amazon Route 53 hosted zone, ACM, and Load Balancer provisioning with Terraform and GitHub Actions
+## Use Case 2: Attach AWS WAF to load balancer using Terraform and GitHub Actions
+**🔔 Attention:** The code for this specific use case is located in the [`add-waf`](https://github.com/kunduso/add-aws-elb-ec2-private-subnet-terraform/tree/add-waf) branch. Please refer to this branch instead of the default `main` branch. **🔔**
+![Image](https://skdevops.files.wordpress.com/2025/04/113-image-0.png)
+Building on use case 1, this implementation shows how to:
+- Protect the application load balancer with AWS WAF security rules
+- Implement AWS managed rules for common vulnerabilities and exploits
+- Configure rate limiting to prevent DDoS attacks
+- Set up geographic restrictions for access control
+- Enable monitoring and logging of WAF activities through CloudWatch
+
+For details, please visit - [attach-aws-waf-to-load-balancer-using-terraform-and-github-actions.](https://skundunotes.com/2025/04/06/attach-aws-waf-to-load-balancer-using-terraform-and-github-actions/)
+
+## Use Case 3: Automate Amazon Route 53 hosted zone, ACM, and Load Balancer provisioning with Terraform and GitHub Actions
 **🔔 Attention:** The code for this specific use case is located in the [`add-acm-r53`](https://github.com/kunduso/add-aws-elb-ec2-private-subnet-terraform/tree/add-acm-r53) branch. Please refer to this branch instead of the default `main` branch. **🔔**
 ![Image](https://skdevops.files.wordpress.com/2025/03/112-image-0.png)
-Building on use case 1, this implementation shows how to:
+Building on use case 2, this implementation shows how to:
 - Enable secure HTTPS (port 443) access to the static website
 - Configure a custom domain name with Amazon Route 53
 - Implement SSL/TLS security using AWS Certificate Manager
 - Replace the default load balancer DNS with a custom domain
 
 For details please visit - [automate-amazon-route-53-hosted-zone-acm-and-load-balancer-provisioning-with-terraform-and-github-actions.](http://skundunotes.com/2025/03/25/automate-amazon-route-53-hosted-zone-acm-and-load-balancer-provisioning-with-terraform-and-github-actions/)
+
+## Use Case 4: Enable Domain Name System (DNS) query logging for Amazon Route 53 hosted zones using Terraform
+**🔔 Attention:** The code for this specific use case is located in the [`add-dns-query-r53`](https://github.com/kunduso/add-aws-elb-ec2-private-subnet-terraform/tree/add-dns-query-r53) branch. Please refer to this branch instead of the default `main` branch. **🔔**
+![Image](https://skdevops.files.wordpress.com/2025/04/114-image-0.png)
+Building on use case 3, this use case demonstrates how to implement DNS query logging for Route 53 hosted zones to enhance security monitoring and operational visibility. DNS query logging provides detailed information about DNS queries received by Route 53, helping teams detect security threats, troubleshoot issues, and maintain compliance requirements.
+
+The solution includes:
+- Amazon Route 53 query logging configuration
+- Amazon CloudWatch log group with KMS encryption
+- KMS key with appropriate key policy
+
+### Regional Consideration
+While most AWS resources in this project are provisioned in `us-east-2`, the CloudWatch log group and KMS key for DNS query logging must be created in `us-east-1`. This is a mandatory AWS requirement. To handle this, we use a separate AWS provider configuration specifically for these components.
+
+For details please visit - [enable-domain-name-system-dns-query-logging-for-amazon-route-53-hosted-zones-using-terraform.](https://skundunotes.com/2025/04/09/enable-domain-name-system-dns-query-logging-for-amazon-route-53-hosted-zones-using-terraform/)
 
 ## Prerequisites
 For this code to function without errors, please create an OpenID connect identity provider in Amazon Identity and Access Management that has a trust relationship with this GitHub repository. You can read about it [here](https://skundunotes.com/2023/02/28/securely-integrate-aws-credentials-with-github-actions-using-openid-connect/) to get a detailed explanation with steps.
