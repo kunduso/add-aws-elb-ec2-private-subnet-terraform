@@ -42,6 +42,21 @@ Building on use case 2, this implementation shows how to:
 
 For details please visit - [automate-amazon-route-53-hosted-zone-acm-and-load-balancer-provisioning-with-terraform-and-github-actions.](http://skundunotes.com/2025/03/25/automate-amazon-route-53-hosted-zone-acm-and-load-balancer-provisioning-with-terraform-and-github-actions/)
 
+## Use Case 4: Enable Domain Name System (DNS) query logging for Amazon Route 53 hosted zones using Terraform
+**🔔 Attention:** The code for this specific use case is located in the [`add-dns-query-r53`](https://github.com/kunduso/add-aws-elb-ec2-private-subnet-terraform/tree/add-dns-query-r53) branch. Please refer to this branch instead of the default `main` branch. **🔔**
+![Image](https://skdevops.files.wordpress.com/2025/04/114-image-0.png)
+Building on use case 3, this use case demonstrates how to implement DNS query logging for Route 53 hosted zones to enhance security monitoring and operational visibility. DNS query logging provides detailed information about DNS queries received by Route 53, helping teams detect security threats, troubleshoot issues, and maintain compliance requirements.
+
+The solution includes:
+- Amazon Route 53 query logging configuration
+- Amazon CloudWatch log group with KMS encryption
+- KMS key with appropriate key policy
+
+### Regional Consideration
+While most AWS resources in this project are provisioned in `us-east-2`, the CloudWatch log group and KMS key for DNS query logging must be created in `us-east-1`. This is a mandatory AWS requirement. To handle this, we use a separate AWS provider configuration specifically for these components.
+
+For details please visit - [enable-domain-name-system-dns-query-logging-for-amazon-route-53-hosted-zones-using-terraform.](https://skundunotes.com/2025/04/09/enable-domain-name-system-dns-query-logging-for-amazon-route-53-hosted-zones-using-terraform/)
+
 ## Prerequisites
 For this code to function without errors, please create an OpenID connect identity provider in Amazon Identity and Access Management that has a trust relationship with this GitHub repository. You can read about it [here](https://skundunotes.com/2023/02/28/securely-integrate-aws-credentials-with-github-actions-using-openid-connect/) to get a detailed explanation with steps.
 <br />Store the `ARN` of the `IAM Role` as a GitHub secret which is referred in the [`terraform.yml`](https://github.com/kunduso/add-aws-elb-ec2-private-subnet-terraform/blob/4144f6ea8f2599658a760f382241594aa001b433/.github/workflows/terraform.yml#L31-L36) file.
