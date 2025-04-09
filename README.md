@@ -7,6 +7,7 @@ This repository contains code to provision various use cases involving Amazon El
 - [Use Case 1: Create Application Load Balancer and attach to Amazon EC2 instances in a private subnet](#use-case-1-create-application-load-balancer-and-attach-to-amazon-ec2-instances-in-a-private-subnet)
 - [Use Case 2: Attach AWS WAF to load balancer using Terraform and GitHub Actions](#use-case-2-attach-aws-waf-to-load-balancer-using-terraform-and-github-actions)
 - [Use Case 3: Automate Amazon Route 53 hosted zone, ACM, and Load Balancer provisioning with Terraform and GitHub Actions](#use-case-3-automate-amazon-route-53-hosted-zone-acm-and-load-balancer-provisioning-with-terraform-and-github-actions)
+- [Use Case 4: Enable Domain Name System (DNS) query logging for Amazon Route 53 hosted zones using Terraform](#use-case-4-enable-domain-name-system-dns-query-logging-for-amazon-route-53-hosted-zones-using-terraform)
 - [Prerequisites](#prerequisites)
 - [Supporting References](#supporting-references)
 - [Usage](#usage)
