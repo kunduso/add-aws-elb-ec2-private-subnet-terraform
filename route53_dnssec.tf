@@ -4,17 +4,6 @@ resource "aws_kms_key" "dnssec" {
   customer_master_key_spec = "ECC_NIST_P256"
   deletion_window_in_days  = 7
   key_usage                = "SIGN_VERIFY"
-}
-
-resource "aws_kms_alias" "dnssec" {
-  provider      = aws.us-east-1
-  name          = "alias/${var.name}-dnssec"
-  target_key_id = aws_kms_key.dnssec.key_id
-}
-
-resource "aws_kms_key_policy" "dnssec" {
-  provider = aws.us-east-1
-  key_id   = aws_kms_key.dnssec.id
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -65,6 +54,11 @@ resource "aws_kms_key_policy" "dnssec" {
   })
 }
 
+resource "aws_kms_alias" "dnssec" {
+  provider      = aws.us-east-1
+  name          = "alias/${var.name}-dnssec"
+  target_key_id = aws_kms_key.dnssec.key_id
+}
 
 resource "aws_route53_key_signing_key" "main" {
   hosted_zone_id             = aws_route53_zone.main.id
