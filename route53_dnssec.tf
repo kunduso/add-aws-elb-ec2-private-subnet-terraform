@@ -49,7 +49,11 @@ resource "aws_kms_key_policy" "dnssec" {
         Principal = {
           Service = "dnssec-route53.amazonaws.com"
         }
-        Action   = ["kms:CreateGrant"]
+        Action = [
+          "kms:CreateGrant",
+          "kms:ListGrants",
+          "kms:RevokeGrant"
+        ]
         Resource = "*"
         Condition = {
           Bool = {
