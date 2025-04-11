@@ -39,19 +39,28 @@ resource "aws_kms_key_policy" "dnssec" {
           "kms:Sign",
           "kms:UpdateKeyDescription",
           "kms:UpdateAlias",
-          "kms:PutKeyPolicy",
-          "kms:CreateGrant"
+          "kms:PutKeyPolicy"
         ]
+        Resource = "*"
+      },
+      {
+        Sid    = "Allow Route 53 DNSSEC to CreateGrant"
+        Effect = "Allow"
+        Principal = {
+          Service = "dnssec-route53.amazonaws.com"
+        }
+        Action   = ["kms:CreateGrant"]
         Resource = "*"
         Condition = {
           Bool = {
-            "kms:GrantIsForAWSResource" : "true"
+            "kms:GrantIsForAWSResource" : true
           }
         }
       }
     ]
   })
 }
+
 
 resource "aws_route53_key_signing_key" "main" {
   hosted_zone_id             = aws_route53_zone.main.id
