@@ -70,7 +70,7 @@ resource "aws_route53_key_signing_key" "main" {
   key_management_service_arn = aws_kms_key.dnssec.arn
   name                       = "${var.name}-key"
   status                     = "ACTIVE"
-  depends_on                 = [aws_kms_key.dnssec]
+  depends_on                 = [aws_kms_key.dnssec, aws_kms_key_policy.dnssec]
 }
 resource "aws_route53_hosted_zone_dnssec" "dns" {
   depends_on = [
