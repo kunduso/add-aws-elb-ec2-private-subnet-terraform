@@ -36,10 +36,7 @@ resource "aws_kms_key_policy" "dnssec" {
         Action = [
           "kms:DescribeKey",
           "kms:GetPublicKey",
-          "kms:Sign",
-          "kms:UpdateKeyDescription",
-          "kms:UpdateAlias",
-          "kms:PutKeyPolicy"
+          "kms:Sign"
         ]
         Resource = "*"
       },
