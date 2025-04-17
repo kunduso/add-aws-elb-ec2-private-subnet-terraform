@@ -8,6 +8,7 @@ This repository contains code to provision various use cases involving Amazon El
 - [Use Case 2: Attach AWS WAF to load balancer using Terraform and GitHub Actions](#use-case-2-attach-aws-waf-to-load-balancer-using-terraform-and-github-actions)
 - [Use Case 3: Automate Amazon Route 53 hosted zone, ACM, and Load Balancer provisioning with Terraform and GitHub Actions](#use-case-3-automate-amazon-route-53-hosted-zone-acm-and-load-balancer-provisioning-with-terraform-and-github-actions)
 - [Use Case 4: Enable Domain Name System (DNS) query logging for Amazon Route 53 hosted zones using Terraform](#use-case-4-enable-domain-name-system-dns-query-logging-for-amazon-route-53-hosted-zones-using-terraform)
+- [Use Case 5: Configure DNSSEC for Amazon Route 53 hosted zone using Terraform](#use-case-5-configure-dnssec-for-amazon-route-53-hosted-zone-using-terraform)
 - [Prerequisites](#prerequisites)
 - [Supporting References](#supporting-references)
 - [Usage](#usage)
@@ -57,6 +58,23 @@ The solution includes:
 While most AWS resources in this project are provisioned in `us-east-2`, the CloudWatch log group and KMS key for DNS query logging must be created in `us-east-1`. This is a mandatory AWS requirement. To handle this, we use a separate AWS provider configuration specifically for these components.
 
 For details please visit - [enable-domain-name-system-dns-query-logging-for-amazon-route-53-hosted-zones-using-terraform.](https://skundunotes.com/2025/04/09/enable-domain-name-system-dns-query-logging-for-amazon-route-53-hosted-zones-using-terraform/)
+
+
+## Use Case 5: Configure DNSSEC for Amazon Route 53 hosted zone using Terraform
+**🔔 Attention:** The code for this specific use case is located in the [`enable-dnssec-route53`](https://github.com/kunduso/add-aws-elb-ec2-private-subnet-terraform/tree/enable-dnssec-route53) branch. Please refer to this branch instead of the default `main` branch. **🔔**
+![Image](https://skdevops.wordpress.com/wp-content/uploads/2025/04/115-image-0.png)
+This use case demonstrates how to implement Domain Name System Security Extensions (DNSSEC) for Route 53 hosted zones using Terraform. DNSSEC adds an additional layer of security to DNS by cryptographically signing DNS records, protecting against DNS spoofing and cache poisoning attacks.
+
+The solution includes:
+- KMS key configuration for DNSSEC signing
+- Route 53 DNSSEC signing enablement
+- Key Signing Key (KSK) creation
+- DS record management for establishing chain of trust
+
+### Regional Consideration
+While most AWS resources in this project are provisioned in `us-east-2`, the KMS key for DNSSEC signing must be created in `us-east-1`. This is a mandatory AWS requirement for Route 53 DNSSEC implementation. To handle this, we use a separate AWS provider configuration specifically for the KMS components.
+
+For details please visit - [configure-dnssec-for-amazon-route-53-hosted-zone-using-terraform.](https://skundunotes.com/2025/04/17/configure-dnssec-for-amazon-route-53-hosted-zone-using-terraform/)
 
 ## Prerequisites
 For this code to function without errors, please create an OpenID connect identity provider in Amazon Identity and Access Management that has a trust relationship with this GitHub repository. You can read about it [here](https://skundunotes.com/2023/02/28/securely-integrate-aws-credentials-with-github-actions-using-openid-connect/) to get a detailed explanation with steps.
